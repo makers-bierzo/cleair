@@ -1,19 +1,22 @@
 import {Router, Request, Response} from 'express';
 import {UserModel} from '../models/user.model';
 import * as Bcrypt from 'bcrypt';
-import {BadRequestHttpException, UnauthorizedHttpException} from '../exceptions/http-exception';
+import {Controller} from './controller';
+import {UnauthorizedHttpException} from '../exceptions/unauthorized-http-exception';
+import {BadRequestHttpException} from '../exceptions/bad-request-http-exception';
 
 interface LoginRequest {
     username: string;
     password: string;
 }
 
-export class AuthController {
+export class AuthController extends Controller {
     private readonly basePath: string = '/auth';
     public readonly router: Router = Router();
 
     constructor() {
-        this.router.post(`${this.basePath}`, AuthController.login);
+        super();
+        this.router.post(`${this.basePath}`, Controller.sync(AuthController.login));
     }
 
     private static async login(request: Request, response: Response): Promise<void> {

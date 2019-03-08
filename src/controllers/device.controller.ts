@@ -4,19 +4,21 @@ import {DeviceModel, IDevice} from '../models/device.model';
 import {AuthMiddleware} from '../middlewares/auth.middleware';
 import {AuthenticationType} from '../http/authentication';
 import {check, validationResult} from 'express-validator/check';
-import {BadRequestHttpException} from '../exceptions/http-exception';
+import {Controller} from './controller';
+import {BadRequestHttpException} from '../exceptions/bad-request-http-exception';
 
-export class DeviceController {
+export class DeviceController extends Controller {
     private readonly basePath: string = '/devices';
     public readonly router: Router = Router();
 
     constructor() {
+        super();
         this.router.get(`${this.basePath}`, [
             AuthMiddleware.onlyAuthenticated(AuthenticationType.User)
-        ], DeviceController.getAll);
+        ], Controller.sync(DeviceController.getAll));
         this.router.post(`${this.basePath}`, [
             check('owner').isString()
-        ], DeviceController.createOne);
+        ], Controller.sync(DeviceController.createOne));
     }
 
     private static async getAll(request: Request, response: Response): Promise<void> {

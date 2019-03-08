@@ -11,6 +11,8 @@ export abstract class Authentication {
     protected constructor(type: AuthenticationType) {
         this.type = type;
     }
+
+    public abstract isValid(): Boolean;
 }
 
 export class DeviceAuthentication extends Authentication {
@@ -19,5 +21,9 @@ export class DeviceAuthentication extends Authentication {
     constructor(device: IDevice) {
         super(AuthenticationType.Device);
         this.device = device;
+    }
+
+    isValid(): Boolean {
+        return this.device !== undefined && this.device !== null;
     }
 }

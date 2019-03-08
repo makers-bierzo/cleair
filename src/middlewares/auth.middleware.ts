@@ -1,5 +1,6 @@
 import * as JWT from 'jsonwebtoken';
-import {DeviceModelMethods, IDevice} from '../models/device.model';
+import {Request} from '../http/request';
+import {DeviceModelMethods} from '../models/device.model';
 import {AuthenticationType, DeviceAuthentication} from '../http/authentication';
 
 const JwtSecret = '';
@@ -31,9 +32,12 @@ export class AuthMiddleware {
     }
 
     public static onlyAuthenticated(type: AuthenticationType) {
-        return (req, res, next) => {
-            console.log("AQUI ENTRA");
-            next();
+        return (req: Request, res, next) => {
+            if (req.auth && req.auth.type == type && req.auth.isValid()) {
+                next();
+            } else {
+                throw new
+            }
         };
     }
 }

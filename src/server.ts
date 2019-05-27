@@ -6,6 +6,7 @@ import {AuthController} from './controllers/auth.controller';
 import {UserController} from './controllers/user.controller';
 import {AuthMiddleware} from './middlewares/auth.middleware';
 import {LogMiddleware} from './middlewares/log.middleware';
+import {ErrorMiddleware} from './middlewares/error.middleware';
 
 export class Server {
     private app: express.Application;
@@ -22,6 +23,8 @@ export class Server {
         this.app.use(new AuthController().router);
         this.app.use(new UserController().router);
         this.app.use(new DeviceController().router);
+
+        this.app.use(ErrorMiddleware.handler);
     }
 
     async listen(port: number) {

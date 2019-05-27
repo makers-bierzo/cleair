@@ -2,8 +2,9 @@ import * as JWT from 'jsonwebtoken';
 import {Request} from '../http/request';
 import {DeviceModelMethods} from '../models/device.model';
 import {AuthenticationType, DeviceAuthentication} from '../http/authentication';
+import * as fs from "fs";
 
-const JwtSecret = '';
+const PublicKey = fs.readFileSync('config/jwt.pub');
 
 export class AuthMiddleware {
     public static handler(req, res, next) {
@@ -12,7 +13,7 @@ export class AuthMiddleware {
             const authHeader = req.headers.authorization.split(' ');
             if (authHeader.length === 2 && authHeader[0] === 'Bearer') {
                 const token = authHeader[1].trim();
-                const verification = JWT.verify(token, JwtSecret, {});
+                const verification = JWT.verify(token, PublicKey, { algorithms: ['RS256']});
                 console.log(verification);
                 next();
             } else if (authHeader.length === 2 && authHeader[0] === 'Device') {
@@ -36,7 +37,7 @@ export class AuthMiddleware {
             if (req.auth && req.auth.type == type && req.auth.isValid()) {
                 next();
             } else {
-                throw new
+                throw new Error('no auth');
             }
         };
     }

@@ -10,7 +10,7 @@ export abstract class Controller {
                     if (err && err instanceof HttpException) {
                         httpException = err;
                     } else {
-                        console.log('entra');
+                        console.error(err);
                         httpException = new InternalServerErrorHttpException(err);
                     }
                     res.status(httpException.status);

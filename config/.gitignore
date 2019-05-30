@@ -1,2 +1,4 @@
-jwt.pub
-jwt.key
+*.cert
+*.key
+!localhost.cert
+!localhost.key

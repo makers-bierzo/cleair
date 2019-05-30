@@ -7,6 +7,8 @@ import * as Bcrypt from 'bcrypt';
 import * as JWT from 'jsonwebtoken';
 import * as fs from 'fs';
 
+import * as Config from '../../config/config.json';
+
 interface LoginRequest {
     username: string;
     password: string;
@@ -21,7 +23,7 @@ export class AuthController extends Controller {
     constructor() {
         super();
 
-        this.privateKey = fs.readFileSync('config/jwt.key');
+        this.privateKey = fs.readFileSync(Config.jwt.private);
 
         this.router.post(`${this.basePath}`, Controller.sync((req, res) => this.login(req, res)));
     }

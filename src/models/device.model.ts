@@ -7,7 +7,7 @@ import {Position} from './position.enum';
 
 const ModelName: string = 'Device';
 
-export interface IDevice extends Document {
+export interface IDevice {
     code: string;
     name: string;
     location?: ILocation,
@@ -35,7 +35,7 @@ const DeviceSchema: Schema = new Schema(DeviceDefinition);
 export const DeviceModel: Model<IDeviceModel> = model<IDeviceModel>(ModelName, DeviceSchema);
 
 export class DeviceModelMethods {
-    public static async findByToken(token: string): DocumentQuery<IDeviceModel, IDeviceModel> {
+    public static findByToken(token: string): DocumentQuery<IDeviceModel, IDeviceModel> {
         return DeviceModel.findOne({'tokens.token': {$eq: token}});
     }
 }

@@ -1,0 +1,6 @@
+{
+  "jwt": {
+    "public": "config/localhost.cert",
+    "private": "config/localhost.key"
+  }
+}

@@ -1,6 +1,6 @@
-import {Schema, Document, SchemaDefinition} from 'mongoose';
+import {Document, SchemaDefinition} from 'mongoose';
 
-export interface IDeviceToken extends Document {
+export interface IDeviceToken {
     token: string;
     expire: Date;
 }

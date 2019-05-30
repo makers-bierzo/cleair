@@ -1,10 +1,9 @@
-import {Model, model, Schema, Document, SchemaDefinition, DocumentQuery} from 'mongoose';
+import {Model, model, Schema, Document, SchemaDefinition} from 'mongoose';
 import {IUserSession, UserSessionDefinition} from './user-session';
-import {DeviceModel, IDeviceModel} from './device.model';
 import {HttpException} from '../exceptions/http-exception';
 import * as Sha256 from 'sha256';
 
-export interface IUser extends Document {
+export interface IUser {
     email: string;
     username: string;
     password: string;

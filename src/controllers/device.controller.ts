@@ -2,7 +2,7 @@ import {Request} from '../http/request';
 import {Response, Router} from 'express';
 import {DeviceModel, IDevice} from '../models/device.model';
 import {AuthMiddleware} from '../middlewares/auth.middleware';
-import {AuthenticationType} from '../http/authentication';
+import {AuthenticationType, UserAuthentication} from '../http/authentication';
 import {check, validationResult} from 'express-validator/check';
 import {Controller} from './controller';
 import {BadRequestHttpException} from '../exceptions/bad-request-http-exception';
@@ -17,7 +17,7 @@ export class DeviceController extends Controller {
             AuthMiddleware.onlyAuthenticated(AuthenticationType.User)
         ], Controller.sync(DeviceController.getAll));
         this.router.post(`${this.basePath}`, [
-            check('owner').isString()
+            check('position').isString()
         ], Controller.sync(DeviceController.createOne));
     }
 
@@ -36,13 +36,18 @@ export class DeviceController extends Controller {
         const validation = validationResult(request);
 
         if (validation.isEmpty()) {
+            const userAuth = request.auth as UserAuthentication;
+
             const device: IDevice = request.body;
+            device.tokens = [];
+
             const devices = await DeviceModel.create([device]);
             response.send(devices.map(device => {
                 return {
                     code: device.code,
                     name: device.name,
-                    position: device.position
+                    position: device.position,
+                    location: device.location
                 };
             }));
         } else {

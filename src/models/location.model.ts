@@ -1,9 +1,9 @@
-import {Schema, Document, SchemaDefinition} from 'mongoose';
+import {Document, SchemaDefinition} from 'mongoose';
 
-export interface ILocation extends Document {
-    latitude: string;
-    longitude: string;
-    altitude: string;
+export interface ILocation {
+    latitude: number;
+    longitude: number;
+    altitude: number;
 }
 
 export interface ILocationModel extends ILocation, Document {

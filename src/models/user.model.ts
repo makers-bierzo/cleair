@@ -2,13 +2,16 @@ import {Model, model, Schema, Document, SchemaDefinition} from 'mongoose';
 import {IUserSession, UserSessionDefinition} from './user-session';
 import {HttpException} from '../exceptions/http-exception';
 import * as Sha256 from 'sha256';
+import {IUserValidation, UserValidationDefinition} from './user-validation';
 
 export interface IUser {
     email: string;
     username: string;
     password: string;
     validated: boolean;
+    validation: IUserValidation;
     sessions: Array<IUserSession>;
+    admin: boolean;
 }
 
 export interface IUserModel extends IUser, Document {
@@ -19,7 +22,9 @@ const UserDefinition: SchemaDefinition = {
     username: {type: String, required: true, unique: true},
     password: {type: String, required: true},
     validated: {type: Boolean, required: true, default: false},
+    validation: {type: UserValidationDefinition},
     sessions: [UserSessionDefinition],
+    admin: {type: Boolean, required: true, default: false},
 };
 
 export const UserModel: Model<IUserModel> = model<IUserModel>('User', new Schema(UserDefinition));

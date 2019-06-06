@@ -1,5 +1,6 @@
 import {IDevice} from '../models/device.model';
 import {IUserSession} from '../models/user-session';
+import {IUser} from '../models/user.model';
 
 export enum AuthenticationType {
     Device,
@@ -31,10 +32,12 @@ export class DeviceAuthentication extends Authentication {
 
 export class UserAuthentication extends Authentication {
     public readonly session: IUserSession;
+    public readonly user: IUser;
 
-    constructor(session: IUserSession) {
+    constructor(session: IUserSession, user: IUser) {
         super(AuthenticationType.User);
         this.session = session;
+        this.user = user;
     }
 
     isValid(): Boolean {

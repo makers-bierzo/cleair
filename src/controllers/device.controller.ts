@@ -22,7 +22,8 @@ export class DeviceController extends Controller {
     }
 
     private static async getAll(request: Request, response: Response): Promise<void> {
-        const devices = await DeviceModel.find();
+        const auth = request.auth as UserAuthentication;
+        const devices = await DeviceModel.find({owner: auth.user._id});
         response.send(devices.map((device) => {
             return {
                 code: device.code,
@@ -36,10 +37,11 @@ export class DeviceController extends Controller {
         const validation = validationResult(request);
 
         if (validation.isEmpty()) {
-            const userAuth = request.auth as UserAuthentication;
+            const auth = request.auth as UserAuthentication;
 
             const device: IDevice = request.body;
             device.tokens = [];
+            device.owner = auth.user;
 
             const devices = await DeviceModel.create([device]);
             response.send(devices.map(device => {

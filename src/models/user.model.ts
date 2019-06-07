@@ -1,4 +1,4 @@
-import {Model, model, Schema, Document, SchemaDefinition} from 'mongoose';
+import {Model, model, Schema, Document, SchemaDefinition, Types} from 'mongoose';
 import {IUserSession, UserSessionDefinition} from './user-session';
 import {HttpException} from '../exceptions/http-exception';
 import * as Sha256 from 'sha256';

@@ -1,6 +1,6 @@
 import {IDevice} from '../models/device.model';
 import {IUserSession} from '../models/user-session';
-import {IUser} from '../models/user.model';
+import {IUser, IUserModel} from '../models/user.model';
 
 export enum AuthenticationType {
     Device,
@@ -32,9 +32,9 @@ export class DeviceAuthentication extends Authentication {
 
 export class UserAuthentication extends Authentication {
     public readonly session: IUserSession;
-    public readonly user: IUser;
+    public readonly user: IUserModel;
 
-    constructor(session: IUserSession, user: IUser) {
+    constructor(session: IUserSession, user: IUserModel) {
         super(AuthenticationType.User);
         this.session = session;
         this.user = user;

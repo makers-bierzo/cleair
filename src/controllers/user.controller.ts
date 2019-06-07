@@ -1,4 +1,4 @@
-import {Router, Request, Response} from 'express';
+import {Request, Response, Router} from 'express';
 import * as Sha256 from 'sha256';
 import * as BCrypt from 'bcrypt';
 import {IUser, UserModel} from '../models/user.model';
@@ -8,6 +8,8 @@ import {ConflictHttpException} from '../exceptions/conflict-http-exception';
 import {BadRequestHttpException} from '../exceptions/bad-request-http-exception';
 import {AuthMiddleware} from '../middlewares/auth.middleware';
 import {AppRequest} from '../middlewares/app-request';
+import {HttpException} from '../exceptions/http-exception';
+import {AuthenticationType, UserAuthentication} from '../http/authentication';
 
 export class UserController extends Controller {
     private readonly basePath: string = '/users';
@@ -19,6 +21,11 @@ export class UserController extends Controller {
         this.router.get(`${this.basePath}`, [
             AuthMiddleware.onlyAuthenticatedAdmin(),
             Controller.sync(UserController.getAll)
+        ]);
+
+        this.router.get(`${this.basePath}/:id`, [
+            AuthMiddleware.onlyAuthenticated(AuthenticationType.User),
+            Controller.sync(UserController.getOne)
         ]);
 
         this.router.post(`${this.basePath}`, [
@@ -38,6 +45,29 @@ export class UserController extends Controller {
                 validated: user.validated
             };
         }));
+    }
+
+    private static async getOne(request: AppRequest, response: Response) {
+        const username = String(request.params.id);
+        const user = await UserModel.findOne({username: username});
+        if (user != null) {
+            const auth = request.auth as UserAuthentication;
+
+            if (auth.user.admin) {
+                response.send({
+                    username: user.username,
+                    email: user.email,
+                    validated: user.validated,
+                    admin: user.admin
+                });
+            } else {
+                response.send({
+                    username: user.username
+                });
+            }
+        } else {
+            throw new HttpException(`User <${username}> not found`, 404);
+        }
     }
 
     private static async createOne(request: Request, response: Response): Promise<void> {
